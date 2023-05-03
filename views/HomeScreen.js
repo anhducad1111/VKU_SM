@@ -1,33 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, Pressable } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, Pressable, ScrollView, RefreshControl } from 'react-native';
 import firebase, { auth, onAuthStateChanged } from 'firebase/app';
 import { getAuth } from "firebase/auth";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import FetchPostScreen from './FetchPostScreen';
+import { getDatabase, ref as databaseRef, set, onValue, get, query, orderByChild } from "firebase/database";
+
 
 const HomeScreen = ({ navigation }) => {
-    // const uid = auth().currentUser.uid;
+    const database = getDatabase();
     const auth = getAuth();
-    const user = auth.currentUser.uid;
-    return (
-        <View >
-            <View style={styles.headerHome}>
-                <View style={styles.textHeader}>
-                    <Text style={styles.textAppHeader}>VKU SM</Text>
-                </View>
-                <View style={styles.iconHeader}>
-                    <View style={styles.searchIconHeader}>
-                        <Pressable onPress={() => navigation.navigate('AddPostScreen')}>
-                            <Icon name="plus" color='#000' size={25} />
-                        </Pressable>
-                    </View>
-                    <View style={styles.postIconHeader}>
-                    <Pressable onPress={() => navigation.navigate('ForgotPasswordScreen')}>
-                            <Icon name="search" color='#000' size={25} />
-                        </Pressable>
-                    </View>
-                </View>
-            </View>
+    const user = auth.currentUser;
+    const currentUserUid = user.uid;
 
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        // Fetch data again here
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'HomeScreen' }],
+        });
+    }
+    const [userName, setUserName] = useState('');
+    return (
+        <View style={styles.container}>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }>
+                <View style={styles.headerHome}>
+                    <View style={styles.textHeader}>
+                        <Text style={styles.textAppHeader}>VKU SM</Text>
+                    </View>
+                    <View style={styles.iconHeader}>
+                        <View style={styles.searchIconHeader}>
+                            <Pressable onPress={() => navigation.navigate('AddPostScreen')}>
+                                <Icon name="plus" color='#000' size={25} />
+                            </Pressable>
+                        </View>
+                        <View style={styles.postIconHeader}>
+                            <Pressable onPress={() => navigation.navigate('SearchScreen')}>
+                                <Icon name="search" color='#000' size={25} />
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.postView}>
+                    <FetchPostScreen userId={currentUserUid} />
+                    
+                </View>
+                <View style={styles.blankView}>
+                    {/* <Text style={styles.textAppHeader}>VKU SM</Text> */}
+                </View>
+            </ScrollView>
         </View>
     )
 };
@@ -76,5 +103,11 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center'
-    }
+    },
+    postView: {
+        flex: 1,
+    },
+    blankView: {
+        height: 80,
+    },
 })

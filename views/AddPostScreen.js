@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, Pressable, TextInput, Alert } from 'react-native';
-import firebase, { auth, onAuthStateChanged } from 'firebase/app';
 import { getAuth } from "firebase/auth";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { getDatabase, ref as databaseRef, set, onValue } from "firebase/database";
+import { useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ImagePicker from 'react-native-image-crop-picker';
 
-const AddPostScreen = ({ navigation }) => {
+const AddPostScreen = ({ navigation, route }) => {
     const storage = getStorage();
     const database = getDatabase();
     const auth = getAuth();
-
+    const user = auth.currentUser;
+    const currentUserUid = user.uid;
+    // lấy user name của người dùng hiện tại
     const [userName, setUserName] = useState('');
+   
     useEffect(() => {
-        const user = auth.currentUser;
-        const currentUserUid = user.uid;
         const userRef = databaseRef(database, 'users/' + currentUserUid);
         onValue(userRef, (snapshot) => {
             const userData = snapshot.val();
@@ -24,12 +25,23 @@ const AddPostScreen = ({ navigation }) => {
         });
     }, []);
 
+    // nút thêm ảnh 
     const [showAddButtons, setShowAddButtons] = useState(false);
     const handlePressAddImage = () => {
         setShowAddButtons(!showAddButtons);
     };
+
     const [image, setImage] = useState(null);
     const [post, setPost] = useState(null);
+
+    const privacyOption = route.params?.privacyOption || 0;
+    const PRIVACY_OPTIONS = {
+        0: 'Public',
+        1: 'Friends',
+        2: 'Private'
+    }
+    const privacyOptionText = PRIVACY_OPTIONS[privacyOption];
+
 
     const takePhotoFromCamera = () => {
         ImagePicker.openCamera({
@@ -69,10 +81,12 @@ const AddPostScreen = ({ navigation }) => {
             const imageUrl = await uploadImage();
 
             await set(databaseRef(database, 'posts/' + user.uid + '/' + new Date().getTime()), {
-                post: post,
+                postText: post,
+                privacy: privacyOption,
                 postImg: imageUrl,
                 likes: null,
                 comments: null,
+                timestamp: new Date().getTime(),
             });
 
             console.log('Post Added!');
@@ -119,6 +133,7 @@ const AddPostScreen = ({ navigation }) => {
         }
     };
 
+
     return (
         <View style={styles.container}>
             <View style={styles.headerAddPost}>
@@ -142,7 +157,12 @@ const AddPostScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.textTopAdd}>
                         <Text style={styles.textName}>{userName}</Text>
-                        <Text style={styles.textPrivacy}>Cong khai</Text>
+                        <View style={styles.privacyOptions}>
+                            <Pressable onPress={() => navigation.navigate('PrivacyPostScreen')}>
+                                <Text style={styles.textPrivacy}>{privacyOptionText}</Text>
+                            </Pressable>
+                            <Icon style={styles.iconPrivacy} name="caret-down" color='#000' size={15} />
+                        </View>
                     </View>
                 </View>
                 <View style={styles.midAddPost}>
@@ -231,10 +251,25 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         // color: '#00FF00',
+        color: '#666',
+    },
+    privacyOptions: {
+        borderColor: 'black',
+        borderWidth: 1,
+        width: 110,
+        padding: 5,
+        marginVertical: 5,
+        borderRadius: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     textPrivacy: {
         fontSize: 14,
-        // color: '#00FF00',
+        color: '#666',
+    },
+    iconPrivacy: {
+        // marginHorizontal: 15,
     },
     midAddPost: {
         marginBottom: 16
@@ -245,7 +280,8 @@ const styles = StyleSheet.create({
         borderColor: '#808080',
         borderRadius: 8,
         padding: 8,
-        textAlignVertical: 'top'
+        textAlignVertical: 'top',
+        color: '#666',
     },
     iconAddImage: {
         alignItems: 'center'
@@ -257,12 +293,14 @@ const styles = StyleSheet.create({
         padding: 15,
         margin: 10,
         borderRadius: 20,
-        alignItems: 'center'
+        alignItems: 'center',
+        color: '#666',
     },
     imagePost: {
         // width: 300,
         height: 250,
         marginVertical: 15,
         borderRadius: 20,
+        
     }
 })

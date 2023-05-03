@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, StatusBar, Image, LayoutAnimation } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, StatusBar, Image, LayoutAnimation, KeyboardAvoidingView } from 'react-native';
 import firebase from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
@@ -42,25 +42,31 @@ const LoginScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.form}>
-                <View>
-                    <Text style={styles.inputTitle}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        autoCapitalize="none"
-                        onChangeText={email => setEmail(email)}
-                        value={email}
-                    />
-                </View>
-                <View style={{ marginTop: 32 }}>
-                    <Text style={styles.inputTitle}>Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        secureTextEntry
-                        autoCapitalize="none"
-                        onChangeText={password => setPassword(password)}
-                        value={password}
-                    />
-                </View>
+                <KeyboardAvoidingView behavior={Platform.OS === 'android' ? '100' : 'height'} >
+                    <View>
+                        <Text style={styles.inputTitle}>Email</Text>
+                        <KeyboardAvoidingView behavior={Platform.OS === 'android' ? '70' : 'height'} >
+                            <TextInput
+                                style={styles.input}
+                                autoCapitalize="none"
+                                onChangeText={email => setEmail(email)}
+                                value={email}
+                            />
+                        </KeyboardAvoidingView>
+                    </View>
+                    <View style={{ marginTop: 32 }}>
+                        <Text style={styles.inputTitle}>Password</Text>
+                        <KeyboardAvoidingView behavior={Platform.OS === 'android' ? '70' : 'height'} >
+                            <TextInput
+                                style={styles.input}
+                                secureTextEntry
+                                autoCapitalize="none"
+                                onChangeText={password => setPassword(password)}
+                                value={password}
+                            />
+                        </KeyboardAvoidingView>
+                    </View>
+                </KeyboardAvoidingView >
             </View>
 
             <Pressable style={styles.button} onPress={handleLogin}>

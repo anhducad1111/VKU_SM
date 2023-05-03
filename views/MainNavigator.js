@@ -11,6 +11,9 @@ import ChatScreen from './ChatScreen';
 import NotificationScreen from './NotificationScreen';
 import SettingScreen from './SettingScreen';
 import AddPostScreen from './AddPostScreen';
+import PrivacyPostScreen from './PrivacyPostScreen';
+import SearchScreen from './SearchScreen';
+import PrivateChatScreen from './PrivateChatScreen';
 
 const AuthStack = createStackNavigator();
 function AuthStackNavigation() {
@@ -70,7 +73,7 @@ function BottomStackNavigationUI() {
                 name="HomeScreen"
                 options={{
                     // tabBarLabel: 'Home',
-                    tabBarIcon: ({ color = '#FFFFFF', size = 18 }) => (
+                    tabBarIcon: ({ color = '#FFFFFF', size = 15 }) => (
                         <Icon name="home" color={color} size={size} />
                     ),
                     tabBarLabelStyle: {
@@ -84,7 +87,7 @@ function BottomStackNavigationUI() {
                 name="FriendScreen"
                 options={{
                     // tabBarLabel: 'Home',
-                    tabBarIcon: ({ color = '#FFFFFF', size = 18 }) => (
+                    tabBarIcon: ({ color = '#FFFFFF', size = 15 }) => (
                         <Icon name="users" color={color} size={size} />
                     ),
                     tabBarLabelStyle: {
@@ -95,24 +98,24 @@ function BottomStackNavigationUI() {
 
             />
             <BottomRNStackUI.Screen
-                name="ChatScreen"
+                name="ChatStack"
                 options={{
                     // tabBarLabel: 'Home',
-                    tabBarIcon: ({ color = '#FFFFFF', size = 18 }) => (
+                    tabBarIcon: ({ color = '#FFFFFF', size = 15 }) => (
                         <Icon name="comments" color={color} size={size} />
                     ),
                     tabBarLabelStyle: {
                         color: '#FFFFFF', // Thay đổi màu chữ thành màu trắng tại đây
                     },
                 }}
-                component={ChatScreen}
+                component={ChatStackNavigation}
 
             />
             <BottomRNStackUI.Screen
                 name="NotificationScreen"
                 options={{
                     // tabBarLabel: 'Home',
-                    tabBarIcon: ({ color = '#FFFFFF', size = 18 }) => (
+                    tabBarIcon: ({ color = '#FFFFFF', size = 15 }) => (
                         <Icon name="bell" color={color} size={size} />
                     ),
                     tabBarLabelStyle: {
@@ -126,7 +129,7 @@ function BottomStackNavigationUI() {
                 name="SettingScreen"
                 options={{
                     // tabBarLabel: 'Home',
-                    tabBarIcon: ({ color = '#FFFFFF', size = 18 }) => (
+                    tabBarIcon: ({ color = '#FFFFFF', size = 15 }) => (
                         <Icon name="bars" color={color} size={size} />
                     ),
                     tabBarLabelStyle: {
@@ -148,9 +151,24 @@ function HomeStackNavigation() {
                 headerShown: false,
             }}>
             <HomeStack.Screen name="LoginScreen" component={HomeScreen} />
+            <HomeStack.Screen name="SearchScreen" component={SearchScreen} />
             <HomeStack.Screen name="AddPostScreen" component={AddPostScreen} />
+            <HomeStack.Screen name="PrivacyPostScreen" component={PrivacyPostScreen} />
             <HomeStack.Screen name="BottomStackNavigationUI" component={BottomStackNavigationUI} />
         </HomeStack.Navigator>
+    );
+}
+
+const ChatStack = createStackNavigator();
+function ChatStackNavigation() {
+    return (
+        <ChatStack.Navigator
+            screenOptions={{
+                headerShown: false,
+            }}>
+            <ChatStack.Screen name="ChatScreen" component={ChatScreen} />
+            <ChatStack.Screen name="PrivateChatScreen" component={PrivateChatScreen} />
+        </ChatStack.Navigator>
     );
 }
 
