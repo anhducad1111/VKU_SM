@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 25,
         marginRight: 10,
+        color:'#000',
     },
     buttonMessage: {
         width: 40,

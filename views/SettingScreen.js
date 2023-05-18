@@ -92,13 +92,13 @@ const SettingScreen = ({ navigation }) => {
                             </View>
                             <View style={styles.numberFriendProfile}>
                                 <Text style={styles.friendProfile}>Friends</Text>
-                                <Text style={styles.numberFriend}>1111</Text>
+                                <Text style={styles.numberFriend}>3</Text>
                             </View>
                         </View>
                     </View>
                 </View>
                 <View style={styles.postFetchProfile}>
-                    <FetchPostScreen userId={currentUserUid}/>
+                    <FetchPostScreen userId={currentUserUid} pageType="personal"/>
                 </View>
                 <View style={styles.blank}>
                 </View>

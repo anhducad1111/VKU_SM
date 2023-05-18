@@ -81,6 +81,7 @@ const AddPostScreen = ({ navigation, route }) => {
             const imageUrl = await uploadImage();
 
             await set(databaseRef(database, 'posts/' + user.uid + '/' + new Date().getTime()), {
+                userPostAdd: userName,
                 postText: post,
                 privacy: privacyOption,
                 postImg: imageUrl,

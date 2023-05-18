@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, FlatList, KeyboardAvoidingView, Pressable, Image, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
 import firebase, { auth, onAuthStateChanged } from 'firebase/app';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -19,18 +19,19 @@ const ChatContainerView = ({ navigation, receivedId }) => {
     const [refreshing, setRefreshing] = useState(false);
     const [image, setImage] = useState(null);
     const [message, setMessage] = useState([]);
+    const scrollViewRef = useRef(null);
 
     useEffect(() => {
         const pairRef = databaseRef(database, `message/${currentUserUid}-${receivedId}`);
         const pairQuery = query(pairRef, orderByChild('timestamp'));
-
-        get(pairQuery).then((snapshot) => {
+    
+        const unsubscribe = onValue(pairQuery, (snapshot) => {
             const pairList = [];
-
+    
             snapshot.forEach((childSnapshot) => {
                 const messageId = childSnapshot.key;
                 const message = childSnapshot.val();
-
+    
                 pairList.push({
                     id: messageId,
                     messageText: message.messageText,
@@ -43,7 +44,11 @@ const ChatContainerView = ({ navigation, receivedId }) => {
             });
             setMessage(pairList);
         });
+    
+        // Hủy đăng ký lắng nghe khi component bị unmount
+        return () => unsubscribe();
     }, [currentUserUid, receivedId]);
+    
 
     return (
         <View style={styles.privateChatContainer}>
@@ -121,6 +126,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
         fontSize: 16,
+        color: '#000',
     },
     textChatRight: {
         backgroundColor: '#0084FF',
@@ -128,6 +134,5 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         fontSize: 16,
         color: '#fff',
-        
     },
 });

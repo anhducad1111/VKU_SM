@@ -5,6 +5,7 @@ import { getAuth } from "firebase/auth";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import FetchPostScreen from './FetchPostScreen';
 import { getDatabase, ref as databaseRef, set, onValue, get, query, orderByChild } from "firebase/database";
+import WeatherScreen from './WeatherScreen';
 
 
 const HomeScreen = ({ navigation }) => {
@@ -24,6 +25,7 @@ const HomeScreen = ({ navigation }) => {
         });
     }
     const [userName, setUserName] = useState('');
+
     return (
         <View style={styles.container}>
             <ScrollView
@@ -48,8 +50,9 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </View>
                 <View style={styles.postView}>
-                    <FetchPostScreen userId={currentUserUid} />
-                    
+                    {/* <WeatherScreen /> */}
+                    <FetchPostScreen userId={currentUserUid} pageType="home" />
+
                 </View>
                 <View style={styles.blankView}>
                     {/* <Text style={styles.textAppHeader}>VKU SM</Text> */}

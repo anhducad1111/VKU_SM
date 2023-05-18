@@ -7,12 +7,13 @@ import moment from 'moment';
 import 'moment/locale/vi'
 
 
-const FetchPostScreen = ({ navigation, userId }) => {
+const FetchPostScreen = ({ navigation, userId, pageType }) => {
     const auth = getAuth();
     // const currentUserUid = auth.currentUser?.uid;
     // const currentUser = auth.currentUser;
     const [userName, setUserName] = useState('');
     const database = getDatabase();
+
 
     useEffect(() => {
         if (userId) {
@@ -26,36 +27,76 @@ const FetchPostScreen = ({ navigation, userId }) => {
     }, [userId]);
 
     const [posts, setPosts] = useState([]);
-    useEffect(() => {
-        const postRef = databaseRef(database, `posts/${userId}`);
-        const postQuery = query(postRef, orderByChild('timestamp'));
 
-        get(postQuery).then((snapshot) => {
-            const postList = [];
 
-            snapshot.forEach((childSnapshot) => {
-                const postId = childSnapshot.key;
-                const post = childSnapshot.val();
+    if (pageType === 'home') {
+        useEffect(() => {
+            const postRef = databaseRef(database, 'posts');
+            const postQuery = query(postRef, orderByChild('timestamp'));
+            get(postQuery).then((snapshot) => {
+                const postList = [];
 
-                postList.push({
-                    id: postId,
-                    postText: post.postText,
-                    privacy: post.privacy,
-                    postImg: post.postImg,
-                    likes: post.likes,
-                    comments: post.comments,
-                    timestamp: post.timestamp,
+                snapshot.forEach((userSnapshot) => {
+                    const userIdPost = userSnapshot.key;
+
+                    userSnapshot.forEach((postSnapshot) => {
+                        const postId = postSnapshot.key;
+                        const post = postSnapshot.val();
+
+                        postList.push({
+                            userIdPost: userIdPost,
+                            id: postId,
+                            postText: post.postText,
+                            privacy: post.privacy,
+                            postImg: post.postImg,
+                            likes: post.likes,
+                            comments: post.comments,
+                            timestamp: post.timestamp,
+                            userPostAdd: post.userPostAdd,
+                        });
+                    });
                 });
-            });
-            const reversedPostList = postList.reverse();
-            setPosts(reversedPostList);
-        });
-    }, []);
 
+                const reversedPostList = postList.reverse();
+                setPosts(reversedPostList);
+            });
+        }, []);
+    } else if (pageType === 'personal') {
+        useEffect(() => {
+            const postRef = databaseRef(database, `posts/${userId}`);
+            const postQuery = query(postRef, orderByChild('timestamp'));
+            get(postQuery).then((snapshot) => {
+                const postList = [];
+
+                snapshot.forEach((childSnapshot) => {
+                    const postId = childSnapshot.key;
+                    const post = childSnapshot.val();
+
+                    postList.push({
+                        userIdPost: userId,
+                        id: postId,
+                        postText: post.postText,
+                        privacy: post.privacy,
+                        postImg: post.postImg,
+                        likes: post.likes,
+                        comments: post.comments,
+                        timestamp: post.timestamp,
+                        userPostAdd: post.userPostAdd,
+                    });
+                });
+
+                const reversedPostList = postList.reverse();
+                setPosts(reversedPostList);
+            });
+        }, [userId]);
+    }
+
+    
     return (
         <View>
             <ScrollView>
                 {posts.map((post) => (
+
                     <View style={styles.container} key={post.id}>
                         <View style={styles.postContainer}>
                             <View style={styles.postHeader}>
@@ -67,7 +108,7 @@ const FetchPostScreen = ({ navigation, userId }) => {
                                         />
                                     </View>
                                     <View style={styles.userInfo}>
-                                        <Text style={styles.userName}>{userName}</Text>
+                                        <Text style={styles.userName}>{post.userPostAdd}</Text>
                                         <Text style={styles.time}>{moment(post.timestamp).locale('en').fromNow()}</Text>
                                     </View>
                                 </View>
@@ -94,25 +135,25 @@ const FetchPostScreen = ({ navigation, userId }) => {
                                     
                                 </View> */}
                                 <Icon
-                                        style={styles.iconContainer}
-                                        name="heart"
-                                        color="#000"
-                                        size={25}
-                                    />
-                                    <Icon
-                                        style={styles.iconContainer}
-                                        name="comment"
-                                        color="#000"
-                                        size={25}
-                                    />
-                                    <Icon
-                                        style={styles.iconContainer}
-                                        name="share"
-                                        color="#000"
-                                        size={25}
-                                    />
-                                    <Icon style={styles.iconRight}
-                                        name="bookmark" color="#000" size={25} />
+                                    style={styles.iconContainer}
+                                    name="heart"
+                                    color="#000"
+                                    size={25}
+                                />
+                                <Icon
+                                    style={styles.iconContainer}
+                                    name="comment"
+                                    color="#000"
+                                    size={25}
+                                />
+                                <Icon
+                                    style={styles.iconContainer}
+                                    name="share"
+                                    color="#000"
+                                    size={25}
+                                />
+                                <Icon style={styles.iconRight}
+                                    name="bookmark" color="#000" size={25} />
                                 {/* <View style={styles.iconGroupRight}>
                                     
                                 </View> */}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, Pressable, ScrollView, RefreshControl } from 'react-native';
 import { getAuth } from "firebase/auth";
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -55,12 +55,13 @@ const ChatScreen = ({ navigation, sentId, receivedId }) => {
                             setPairList(userList);
                         }
                     });
+                    scrollViewRef.current.scrollToEnd({ animated: true });
                 }
             });
         });
     }, [currentUserUid]);
     const [refreshing, setRefreshing] = useState(false);
-
+    const scrollViewRef = useRef(null);
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -71,6 +72,8 @@ const ChatScreen = ({ navigation, sentId, receivedId }) => {
         });
         console.log(currentUserUid)
     }
+
+
 
     return (
         <View style={styles.container}>
@@ -92,13 +95,15 @@ const ChatScreen = ({ navigation, sentId, receivedId }) => {
             <ScrollView
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                }>
+                }
+                ref={scrollViewRef}
+                onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}>
                 <View>
                     {pairList.map((pair) => (
                         <View key={pair.id}>
-                            <Pressable style={styles.resultSearch}  
-                            onPress={() => navigation.navigate('PrivateChatScreen', 
-                            { receivedId: pair.receivedId })}>
+                            <Pressable style={styles.resultSearch}
+                                onPress={() => navigation.navigate('PrivateChatScreen',
+                                    { receivedId: pair.receivedId })}>
                                 <View style={styles.avatarUser}>
                                     <Image style={styles.imageAvatarUser} source={require('../assets/tempAvatar.jpg')} />
                                     <View style={styles.profile}>
