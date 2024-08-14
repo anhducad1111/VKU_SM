@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "538436805298",
+    "firebase_url": "https://vku-sm-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "vku-sm",
+    "storage_bucket": "vku-sm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538436805298:android:25001e87f516ed65c59fab",
+        "android_client_info": {
+          "package_name": "com.vku_sm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "538436805298-oop7q0srq2d2d962fli8tremovrgu4bq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxfrcU5BDpUepVE_9-O-BMh6j2zAOEYcw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "538436805298-nk7t2md0hokj19614hi2mvht8k7m1dua.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
