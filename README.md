@@ -7,8 +7,14 @@ This repository contains the source code for the VKU_SM mobile application devel
 - Android SDK: In order to run the application on an Android device or emulator, you will need to have the Android SDK installed. You can download it from [here](https://developer.android.com/studio#downloads).
 
 ## Getting Started
-1. Clone this repository to your local machine.
-2. Open a terminal and navigate to the project directory.
+1. Clone this repository to your local machine by running the following command in your terminal:
+```
+git clone https://github.com/anhducad1111/VKU_SM
+```
+2. Open a terminal and navigate to the project directory using the `cd` command:
+```
+cd VKU_SM
+```
 3. Run `yarn` or `npm install` to install the project dependencies.
 4. Connect your Android device or start an emulator.
 5. Run `yarn android` to start the application on your Android device or emulator.
