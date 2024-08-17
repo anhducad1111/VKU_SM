@@ -148,7 +148,7 @@ const EditProfile = ({ navigation }) => {
       <View style={styles.headerProfile}>
         <Pressable
           style={styles.buttonHeaderProfile}
-          onPress={() => navigation.navigate('SettingScreen')}
+          onPress={() => navigation.navigate('PersonalProfile')}
         >
           <Icon name="arrow-left" color="#000" size={25} />
         </Pressable>
@@ -260,16 +260,15 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#f8f8f8",
   },
-  headerProfile: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-  },
   buttonHeaderProfile: {
-    padding: 10,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerProfile: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // padding: 10,
   },
   editButtonEditProfile: {
     paddingVertical: 10,

@@ -83,7 +83,7 @@ const PersonalProfile = ({ navigation }) => {
     setRefreshing(true);
     navigation.reset({
       index: 0,
-      routes: [{ name: "SettingScreen" }],
+      routes: [{ name: "PersonalProfile" }],
     });
     setRefreshing(false);
   };

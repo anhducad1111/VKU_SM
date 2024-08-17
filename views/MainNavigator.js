@@ -8,13 +8,14 @@ import { BottomFabBar } from 'rn-wave-bottom-bar';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import FriendScreen from './friends/FriendScreen';
 import ChatScreen from './chat/ChatScreen';
-import NotificationScreen from './NotificationScreen';
+import NotificationScreen from './notifications/NotificationScreen';
 import PersonalProfile from './profile/PersonalProfile';
 import AddPostScreen from './posts/AddPostScreen';
 import PrivacyPostScreen from './posts/PrivacyPostScreen';
 import SearchScreen from './SearchScreen';
 import PrivateChatScreen from './chat/PrivateChatScreen';
 import EditProfile from './profile/EditProfile';
+import NotificationDetail from './notifications/NotificationDetail';
 
 const AuthStack = createStackNavigator();
 function AuthStackNavigation() {
@@ -58,8 +59,6 @@ function BottomStackNavigationUI() {
                         shadowRadius: 9.11,
                         elevation: 14,
                     }}
-                    // - You can add the style below to show screen content under the tab-bar
-                    // - It will makes the "transparent tab bar" effect.
                     bottomBarContainerStyle={{
                         position: 'absolute',
                         bottom: 0,
@@ -92,7 +91,7 @@ function BottomStackNavigationUI() {
                         <Icon name="users" color={color} size={size} />
                     ),
                     tabBarLabelStyle: {
-                        color: '#FFFFFF', // Thay đổi màu chữ thành màu trắng tại đây
+                        color: '#FFFFFF', 
                     },
                 }}
                 component={FriendScreen}
@@ -113,7 +112,7 @@ function BottomStackNavigationUI() {
 
             />
             <BottomRNStackUI.Screen
-                name="NotificationScreen"
+                name="NotificationStackNavigation"
                 options={{
                     // tabBarLabel: 'Home',
                     tabBarIcon: ({ color = '#FFFFFF', size = 15 }) => (
@@ -123,7 +122,7 @@ function BottomStackNavigationUI() {
                         color: '#FFFFFF', // Thay đổi màu chữ thành màu trắng tại đây
                     },
                 }}
-                component={NotificationScreen}
+                component={NotificationStackNavigation}
 
             />
             <BottomRNStackUI.Screen
@@ -183,6 +182,19 @@ function PersonalStackNavigation() {
             <PersonalStack.Screen name="PersonalProfile" component={PersonalProfile} />
             <PersonalStack.Screen name="EditProfile" component={EditProfile} />
         </PersonalStack.Navigator>
+    );
+}
+
+const NotificationStack = createStackNavigator();
+function NotificationStackNavigation() {
+    return (
+        <NotificationStack.Navigator
+            screenOptions={{
+                headerShown: false,
+            }}>
+            <NotificationStack.Screen name="NotificationScreen" component={NotificationScreen} />
+            <NotificationStack.Screen name="NotificationDetail" component={NotificationDetail} />
+        </NotificationStack.Navigator>
     );
 }
 
