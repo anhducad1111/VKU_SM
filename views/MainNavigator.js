@@ -12,7 +12,7 @@ import NotificationScreen from './notifications/NotificationScreen';
 import PersonalProfile from './profile/PersonalProfile';
 import AddPostScreen from './posts/AddPostScreen';
 import PrivacyPostScreen from './posts/PrivacyPostScreen';
-import SearchScreen from './SearchScreen';
+import SearchScreen from './search/SearchScreen';
 import PrivateChatScreen from './chat/PrivateChatScreen';
 import EditProfile from './profile/EditProfile';
 import NotificationDetail from './notifications/NotificationDetail';

@@ -19,7 +19,7 @@ import {
     query,
     get
 } from "firebase/database";
-import AddFriendButton from './components/AddFriendButton';
+import AddFriendButton from '../components/AddFriendButton';
 
 const SearchScreen = ({ navigation, sentId, receivedId }) => {
     const storage = getStorage();

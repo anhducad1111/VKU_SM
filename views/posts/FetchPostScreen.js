@@ -20,7 +20,7 @@ import moment from "moment";
 import "moment/locale/vi";
 import DropdownMenu from "../components/DropDownMenu";
 
-const FetchPostScreen = ({ navigation, userPostId, pageType }) => {
+const FetchPostScreen = ({ pageType }) => {
   const database = getDatabase();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);

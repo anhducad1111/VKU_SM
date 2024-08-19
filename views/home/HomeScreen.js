@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import FetchPostScreen from '../posts/FetchPostScreen';
 import { getDatabase } from "firebase/database";
 import WeatherScreen from '../components/WeatherScreen';
+import Header from '../components/Header';
 
 const HomeScreen = ({ navigation }) => {
     const database = getDatabase();
@@ -27,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
         if (item.type === 'weather') {
             return <WeatherScreen />;
         } else if (item.type === 'posts') {
-            return <FetchPostScreen userId={currentUserUid} pageType="home" />;
+            return <FetchPostScreen pageType="home" />;
         }
         return null;
     };
@@ -44,23 +45,7 @@ const HomeScreen = ({ navigation }) => {
                 renderItem={renderItem}
                 keyExtractor={(item, index) => index.toString()}
                 ListHeaderComponent={
-                    <View style={styles.headerHome}>
-                        <View style={styles.textHeader}>
-                            <Text style={styles.textAppHeader}>VKU SM</Text>
-                        </View>
-                        <View style={styles.iconHeader}>
-                            <View style={styles.searchIconHeader}>
-                                <Pressable onPress={() => navigation.navigate('AddPostScreen')}>
-                                    <Icon name="plus" color='#000' size={25} />
-                                </Pressable>
-                            </View>
-                            <View style={styles.postIconHeader}>
-                                <Pressable onPress={() => navigation.navigate('SearchScreen')}>
-                                    <Icon name="search" color='#000' size={25} />
-                                </Pressable>
-                            </View>
-                        </View>
-                    </View>
+                    <Header />
                 }
                 ListFooterComponent={<View style={styles.blankView} />}
                 stickyHeaderIndices={[0]}
@@ -78,45 +63,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    headerHome: {
-        height: 50,
-        backgroundColor: '#808080',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-    },
-    textHeader: {
-        flex: 1,
-    },
-    textAppHeader: {
-        color: '#FFFFFF',
-        fontSize: 18,
-        fontWeight: 'bold'
-    },
-    iconHeader: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-    },
-    searchIconHeader: {
-        backgroundColor: '#FFFFFF',
-        width: 40,
-        height: 40,
-        borderRadius: 50,
-        marginRight: 12,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    postIconHeader: {
-        backgroundColor: '#FFFFFF',
-        width: 40,
-        height: 40,
-        borderRadius: 50,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
+    
     blankView: {
         height: 80,
     },
