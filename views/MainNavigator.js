@@ -16,7 +16,7 @@ import SearchScreen from './SearchScreen';
 import PrivateChatScreen from './chat/PrivateChatScreen';
 import EditProfile from './profile/EditProfile';
 import NotificationDetail from './notifications/NotificationDetail';
-
+import SettingScreen from './setting/SettingScreen';
 const AuthStack = createStackNavigator();
 function AuthStackNavigation() {
     return (
@@ -181,6 +181,7 @@ function PersonalStackNavigation() {
             }}>
             <PersonalStack.Screen name="PersonalProfile" component={PersonalProfile} />
             <PersonalStack.Screen name="EditProfile" component={EditProfile} />
+            <PersonalStack.Screen name="SettingScreen" component={SettingScreen} />
         </PersonalStack.Navigator>
     );
 }

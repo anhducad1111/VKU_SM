@@ -4,13 +4,13 @@ import {
   Text,
   StyleSheet,
   Image,
-  ScrollView,
   Pressable,
   RefreshControl,
-  Alert
+  Alert,
+  FlatList
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { getAuth, signOut  } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { getDatabase, ref as databaseRef, get } from "firebase/database";
 import FetchPostScreen from "../posts/FetchPostScreen";
 import DropdownMenu from "../components/DropDownMenu";
@@ -48,10 +48,15 @@ const PersonalProfile = ({ navigation }) => {
       onPress: () => navigation.navigate('EditProfile'),
     },
     {
+      label: 'Settings',
+      onPress: () => navigation.navigate('SettingScreen'),
+    },
+    {
       label: 'Sign Out',
       onPress: handleSignOut
     },
   ];
+
   useEffect(() => {
     if (currentUser) {
       const userId = currentUser.uid;
@@ -78,7 +83,7 @@ const PersonalProfile = ({ navigation }) => {
       setPostCount(0);
     }
   };
-  
+
   const onRefresh = () => {
     setRefreshing(true);
     navigation.reset({
@@ -88,60 +93,71 @@ const PersonalProfile = ({ navigation }) => {
     setRefreshing(false);
   };
 
+  const renderHeader = () => (
+    <View>
+      <View style={styles.headerProfile}>
+        <Pressable
+          style={styles.buttonHeaderProfile}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="arrow-left" color="#000" size={25} />
+        </Pressable>
+        
+        <DropdownMenu
+          iconName="bars"
+          iconSize={25}
+          iconColor="#000"
+          items={dropdownItems}
+        />
+      </View>
+
+      <View style={styles.infoProfile}>
+        <View style={styles.avatarUser}>
+          <Image
+            style={styles.imageAvatarUser}
+            source={{ uri: profileImageUrl }}
+          />
+        </View>
+        <View style={styles.fetchProfile}>
+          <View style={styles.nameBioProfile}>
+            <View style={styles.profile}>
+              <Text style={styles.nameProfile}>{userName}</Text>
+            </View>
+            <Text style={styles.bioProfile}>Hello cac b</Text>
+          </View>
+          <View style={styles.numberProfile}>
+            <View style={styles.numberPostProfile}>
+              <Text style={styles.postProfile}>Posts</Text>
+              <Text style={styles.numberPost}>{postCount}</Text>
+            </View>
+            <View style={styles.numberFriendProfile}>
+              <Text style={styles.friendProfile}>Friends</Text>
+              <Text style={styles.numberFriend}>3</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+
+  const renderItem = ({ item }) => (
+    <View style={styles.postFetchProfile}>
+      <FetchPostScreen userId={currentUserUid} pageType="personal" />
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <ScrollView
+      <FlatList
+        data={[{ key: 'posts' }]} // Dummy data to render the FetchPostScreen
+        renderItem={renderItem}
+        keyExtractor={(item) => item.key}
+        ListHeaderComponent={renderHeader}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-      >
-        <View style={styles.headerProfile}>
-          <Pressable
-            style={styles.buttonHeaderProfile}
-            onPress={() => navigation.goBack()}
-          >
-            <Icon name="arrow-left" color="#000" size={25} />
-          </Pressable>
-          
-          <DropdownMenu
-            iconName="bars"
-            iconSize={25}
-            iconColor="#000"
-            items={dropdownItems}
-          />
-        </View>
-
-        <View style={styles.infoProfile}>
-          <View style={styles.avatarUser}>
-            <Image
-              style={styles.imageAvatarUser}
-              source={{ uri: profileImageUrl }}
-            />
-          </View>
-          <View style={styles.fetchProfile}>
-            <View style={styles.nameBioProfile}>
-              <View style={styles.profile}>
-                <Text style={styles.nameProfile}>{userName}</Text>
-              </View>
-              <Text style={styles.bioProfile}>Hello cac b</Text>
-            </View>
-            <View style={styles.numberProfile}>
-              <View style={styles.numberPostProfile}>
-                <Text style={styles.postProfile}>Posts</Text>
-                <Text style={styles.numberPost}>{postCount}</Text>
-              </View>
-              <View style={styles.numberFriendProfile}>
-                <Text style={styles.friendProfile}>Friends</Text>
-                <Text style={styles.numberFriend}>3</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View style={styles.postFetchProfile}>
-          <FetchPostScreen userId={currentUserUid} pageType="personal" />
-        </View>
-        <View style={styles.blank}></View>
-      </ScrollView>
+      />
+      <View style={styles.blank}></View>
     </View>
   );
 };

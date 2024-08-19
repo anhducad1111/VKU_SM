@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, Pressable, ScrollView, RefreshControl } from 'react-native';
-import firebase, { auth, onAuthStateChanged } from 'firebase/app';
+import { View, Text, StyleSheet, FlatList, Pressable, RefreshControl } from 'react-native';
 import { getAuth } from "firebase/auth";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import FetchPostScreen from '../posts/FetchPostScreen';
-import { getDatabase, ref as databaseRef, set, onValue, get, query, orderByChild } from "firebase/database";
-import WeatherScreen from '../WeatherScreen';
-
+import { getDatabase } from "firebase/database";
+import WeatherScreen from '../components/WeatherScreen';
 
 const HomeScreen = ({ navigation }) => {
     const database = getDatabase();
@@ -24,40 +22,52 @@ const HomeScreen = ({ navigation }) => {
             routes: [{ name: 'HomeScreen' }],
         });
     }
-    const [userName, setUserName] = useState('');
+
+    const renderItem = ({ item }) => {
+        if (item.type === 'weather') {
+            return <WeatherScreen />;
+        } else if (item.type === 'posts') {
+            return <FetchPostScreen userId={currentUserUid} pageType="home" />;
+        }
+        return null;
+    };
+
+    const data = [
+        { type: 'weather' },
+        { type: 'posts' }
+    ];
 
     return (
         <View style={styles.container}>
-            <ScrollView
+            <FlatList
+                data={data}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                ListHeaderComponent={
+                    <View style={styles.headerHome}>
+                        <View style={styles.textHeader}>
+                            <Text style={styles.textAppHeader}>VKU SM</Text>
+                        </View>
+                        <View style={styles.iconHeader}>
+                            <View style={styles.searchIconHeader}>
+                                <Pressable onPress={() => navigation.navigate('AddPostScreen')}>
+                                    <Icon name="plus" color='#000' size={25} />
+                                </Pressable>
+                            </View>
+                            <View style={styles.postIconHeader}>
+                                <Pressable onPress={() => navigation.navigate('SearchScreen')}>
+                                    <Icon name="search" color='#000' size={25} />
+                                </Pressable>
+                            </View>
+                        </View>
+                    </View>
+                }
+                ListFooterComponent={<View style={styles.blankView} />}
+                stickyHeaderIndices={[0]}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                }>
-                <View style={styles.headerHome}>
-                    <View style={styles.textHeader}>
-                        <Text style={styles.textAppHeader}>VKU SM</Text>
-                    </View>
-                    <View style={styles.iconHeader}>
-                        <View style={styles.searchIconHeader}>
-                            <Pressable onPress={() => navigation.navigate('AddPostScreen')}>
-                                <Icon name="plus" color='#000' size={25} />
-                            </Pressable>
-                        </View>
-                        <View style={styles.postIconHeader}>
-                            <Pressable onPress={() => navigation.navigate('SearchScreen')}>
-                                <Icon name="search" color='#000' size={25} />
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.postView}>
-                    {/* <WeatherScreen /> */}
-                    <FetchPostScreen userId={currentUserUid} pageType="home" />
-
-                </View>
-                <View style={styles.blankView}>
-                    {/* <Text style={styles.textAppHeader}>VKU SM</Text> */}
-                </View>
-            </ScrollView>
+                }
+            />
         </View>
     )
 };
@@ -69,12 +79,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     headerHome: {
-        height: 70,
+        height: 50,
         backgroundColor: '#808080',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 16
+        paddingHorizontal: 16,
     },
     textHeader: {
         flex: 1,
@@ -92,8 +102,8 @@ const styles = StyleSheet.create({
     },
     searchIconHeader: {
         backgroundColor: '#FFFFFF',
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         borderRadius: 50,
         marginRight: 12,
         justifyContent: 'center',
@@ -101,16 +111,13 @@ const styles = StyleSheet.create({
     },
     postIconHeader: {
         backgroundColor: '#FFFFFF',
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center'
     },
-    postView: {
-        flex: 1,
-    },
     blankView: {
         height: 80,
     },
-})
+});
